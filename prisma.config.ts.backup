@@ -1,0 +1,14 @@
+import { defineConfig } from 'prisma/config'
+
+export default defineConfig({
+  generator: {
+    provider: 'prisma-client-js'
+  },
+  datasource: {
+    provider: 'postgresql',
+    url: process.env.DATABASE_URL
+  },
+  seed: {
+    command: 'node prisma/seed.mjs'
+  }
+})

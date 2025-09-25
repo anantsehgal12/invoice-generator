@@ -1,0 +1,4 @@
+- [x] Add "Create Proforma" button to dashboard actions in src/app/page.tsx (next to Create Invoice, with amber styling)
+- [x] Add "Create New Proforma" to Quick Actions in src/app/page.tsx
+- [x] Add "Create Proforma" to navigation array in src/components/Navigation.tsx
+- [x] Convert Create Proforma Invoice page to dark theme (src/app/invoices/create/proforma/page.tsx)

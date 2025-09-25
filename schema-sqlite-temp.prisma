@@ -1,0 +1,157 @@
+// Temporary SQLite schema for testing
+// Copy this to prisma/schema.prisma if you want to test with SQLite first
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum InvoiceStatus {
+  draft
+  sent
+  paid
+  overdue
+  cancelled
+}
+
+enum InvoiceType {
+  invoice
+  proforma
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  companies Company[]
+  products  Product[]
+  invoices  Invoice[]
+  settings  Settings?
+}
+
+model Company {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name               String
+  logo               String?
+  gst                String
+  pan                String?
+  street             String
+  city               String
+  state              String
+  pincode            String
+  country            String
+  mobile             String
+  email              String?
+  website            String?
+  bankName           String?
+  accountNumber      String?
+  ifscCode           String?
+  accountHolderName  String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  invoices           Invoice[]
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  description   String?
+  hsnCode       String?
+  price         Float
+  taxRate       Float
+  unit          String
+  category      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  invoiceItems  InvoiceItem[]
+}
+
+model Invoice {
+  id                 String         @id @default(cuid())
+  userId             String
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoiceNumber      String
+  type               InvoiceType    @default(invoice)
+  company            Company        @relation(fields: [companyId], references: [id])
+  companyId          String
+  billToName         String
+  billToGst          String?
+  billToStreet       String
+  billToCity         String
+  billToState        String
+  billToPincode      String
+  billToCountry      String
+  billToMobile       String?
+  billToEmail        String?
+  invoiceDate        DateTime
+  dueDate            DateTime
+  placeOfSupply      String
+  items              InvoiceItem[]
+  subtotal           Float
+  totalTax           Float
+  discount           Float?
+  discountType       String?
+  total              Float
+  amountPaid         Float        @default(0)
+  notes              String?
+  terms              String?
+  status             InvoiceStatus @default(draft)
+  additionalCharges  AdditionalCharge[]
+  payments           Payment[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model AdditionalCharge {
+  id        String  @id @default(cuid())
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String
+  name      String
+  amount    Float
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String
+  amount    Float
+  date      DateTime @default(now())
+  method    String?
+  note      String?
+}
+
+model Settings {
+  userId    String   @id
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InvoiceItem {
+  id           String   @id @default(cuid())
+  invoice      Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId    String
+  product      Product? @relation(fields: [productId], references: [id])
+  productId    String?
+  productName  String
+  description  String?
+  hsnCode      String?
+  quantity     Int
+  unit         String
+  rate         Float
+  taxRate      Float
+  amount       Float
+  taxAmount    Float
+  totalAmount  Float
+}

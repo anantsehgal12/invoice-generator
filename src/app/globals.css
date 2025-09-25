@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  /* Light theme colors */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Anchor default colors for better dark mode contrast */
+a { color: inherit; }
+
+/* Tables default background alignment */
+table { background-color: transparent; }
+
+/* Print specific styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-visible {
+    display: block !important;
+  }
+}
