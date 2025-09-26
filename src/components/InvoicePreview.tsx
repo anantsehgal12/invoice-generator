@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import { Invoice, Company } from '@/types';
 import { formatCurrency, numberToWords, calculateGSTType } from '@/utils/calculations';
 import { format } from 'date-fns';
-import { textAlign } from 'html2canvas/dist/types/css/property-descriptors/text-align';
+import { textAlign } from 'html2canvas-pro/dist/types/css/property-descriptors/text-align';
 
 interface InvoicePreviewProps {
   invoice: Invoice;
@@ -350,5 +350,6 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
 );
 
 InvoicePreview.displayName = 'InvoicePreview';
+
 
 export default InvoicePreview;
